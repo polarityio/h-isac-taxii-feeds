@@ -1,1 +1,94 @@
-{{!-- TODO: Write template --}}
+<h1 class="p-title">
+  {{fa-icon "map-signs" size="lg" class="title-icon"}} Collections
+</h1>
+{{#each details.collectionsWithFoundObjects as |collection collectionIndex|}}
+  {{#if (gt collectionIndex 0)}}
+    <hr>
+  {{/if}}
+
+  {{#if collection.title}}
+    <div>
+      <span class="p-key">Title: </span>
+      <span class="p-value">{{collection.title}}</span>
+    </div>
+  {{/if}}
+  {{#if collection.description}}
+    <div>
+      <span class="p-key">Description: </span>
+      <pre class="p-value">{{collection.description}}</pre>
+    </div>
+  {{/if}}
+
+  <h1 class="p-title">
+    {{fa-icon "map-pin" size="lg" class="title-icon"}} Found Indicator{{if (gt collection.objects.length 1) "s"}}
+  </h1>
+  <div class="objects">
+    {{#each collection.objects as |object|}}
+      {{#if object.name}}
+        <div>
+          <span class="p-key">Name: </span>
+          <span class="p-value">{{object.name}}</span>
+        </div>
+      {{/if}}
+      {{#if object.description}}
+        {{#if object.descriptionIsArray}}
+          {{#each-in object.description as |key value|}}
+            <div>
+              <span class="p-key">{{key}}: </span>
+              <span class="p-value">{{value}}</span>
+            </div>
+          {{/each-in}}
+        {{else}}
+          <div>
+            <span class="p-key">description: </span>
+            <span class="p-value">{{object.description}}</span>
+          </div>
+        {{/if}}
+      {{/if}}
+      {{#if object.created}}
+        <div>
+          <span class="p-key">Created At: </span>
+          <span class="p-value">{{moment-format object.created "MM/DD/YYYY HH:mm:ss" timeZone=timezone}}</span>
+        </div>
+      {{/if}}
+      {{#if object.modified}}
+        <div>
+          <span class="p-key">Last Modified At: </span>
+          <span class="p-value">{{moment-format object.modified "MM/DD/YYYY HH:mm:ss" timeZone=timezone}}</span>
+        </div>
+      {{/if}}
+      {{#if object.valid_from}}
+        <div>
+          <span class="p-key">Valid From: </span>
+          <span class="p-value">{{moment-format object.valid_from "MM/DD/YYYY HH:mm:ss" timeZone=timezone}}</span>
+        </div>
+      {{/if}}
+      {{#if object.confidence}}
+        <div>
+          <span class="p-key">Confidence: </span>
+          <span class="p-value">{{object.confidence}}</span>
+        </div>
+      {{/if}}
+      {{#if object.labels}}
+        <div>
+          <span class="p-key">Labels: </span>
+          <div class="labels">
+            {{#each object.labels as |label labelIndex|}}
+              <span class="label">{{label}}</span>
+            {{/each}}
+          </div>
+        </div>
+      {{/if}}
+      {{#if object.indicator_types}}
+        <div>
+          <span class="p-key">Indicator Types: </span>
+          <div class="labels">
+            {{#each object.indicator_types as |type typeIndex|}}
+              <span class="label">{{type}}</span>
+            {{/each}}
+          </div>
+        </div>
+      {{/if}}
+    {{/each}}
+  </div>
+{{/each}}

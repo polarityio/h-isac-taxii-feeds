@@ -1,9 +1,7 @@
 const fs = require('fs');
-const request = require('request');
-const { promisify } = require('util');
 const fp = require('lodash/fp');
+const request = require('request');
 const config = require('../config/config');
-const getAuthToken = require('./getAuthToken');
 
 const { checkForInternalServiceError } = require('./handleError');
 
