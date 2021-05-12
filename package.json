@@ -1,6 +1,6 @@
 {
   "main": "./integration.js",
-  "name": "hsisac-taxii-feeds",
+  "name": "h-isac-taxii-feeds",
   "version": "3.0.0-beta",
   "private": true,
   "license": "MIT",

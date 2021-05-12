@@ -36,7 +36,6 @@ const splitOutIgnoredIps = (_entitiesPartition) => {
 
 
 module.exports = {
-  partitionFlatMap,
   groupEntities,
   splitOutIgnoredIps
 };

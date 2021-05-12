@@ -65,12 +65,11 @@ const createRequestWithDefaults = (Logger) => {
     };
   };
 
-
   const checkForStatusError = ({ statusCode, body }, requestOptions) => {
     Logger.trace({ statusCode, body, requestOptions });
     checkForInternalServiceError(statusCode, body);
     const roundedStatus = Math.round(statusCode / 100) * 100;
-    if (![200].includes(roundedStatus)) { 
+    if (![200].includes(roundedStatus)) {
       const requestError = Error('Request Error');
       requestError.status = statusCode;
       requestError.description = body;
@@ -80,38 +79,40 @@ const createRequestWithDefaults = (Logger) => {
   };
 
   const handlePagination = async (result, requestOptions) => {
-    //TODO: rewrite to handle taxii type pagination
-    const totalPages = fp.get('body.pages.total', result);
-    const currentPage = fp.get('body.pages.current', result);
-    
-    const shouldUseNormalPagination =
-      totalPages && currentPage && totalPages > currentPage;
+    const more = fp.get('body.more', result);
+    const next = fp.get('body.next', result);
 
-    const nextKey = fp.get('body.pages.nextKey', result);
-    const shouldUseKeyBasedPagination = !!nextKey;
-
-    if (shouldUseNormalPagination || shouldUseKeyBasedPagination) {
+    if (more && next) {
       const nextPageResults = await requestDefaultsWithInterceptors({
         ...requestOptions,
         qs: {
           ...requestOptions.qs,
-          ...(shouldUseKeyBasedPagination
-            ? { pageFromKey: nextKey }
-            : { page: currentPage + 1 })
+          next
         }
       });
+
+      const objects = fp.get('body.objects', result);
+      const collections = fp.get('body.collections', result);
 
       return {
         ...nextPageResults,
         body: {
           ...nextPageResults.body,
-          items: [...result.body.items, ...nextPageResults.body.items]
+          ...(objects && {
+            objects: fp.concat(fp.get('body.objects', nextPageResults), objects)
+          }),
+          ...(collections && {
+            collections: fp.concat(
+              fp.get('body.collections', nextPageResults),
+              collections
+            )
+          })
         }
       };
     }
-    
-    return result
-  }
+
+    return result;
+  };
 
   const requestDefaultsWithInterceptors = requestWithDefaults(
     () => ({}),
