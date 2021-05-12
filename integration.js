@@ -80,9 +80,9 @@ const doLookup = async (entities, options, cb) => {
 
 const validateOptions = async (options, callback) => {
   const stringOptionsErrorMessages = {
-    url: 'You must provide a valid Url for a HSISAC Taxii Feed.',
-    username: 'You must provide a valid API Username for a HSISAC Taxii Feed.',
-    password: 'You must provide a valid API Password for a HSISAC Taxii Feed.'
+    url: 'You must provide a valid Url for a H-ISAC Taxii Feed.',
+    username: 'You must provide a valid API Username for a H-ISAC Taxii Feed.',
+    password: 'You must provide a valid API Password for a H-ISAC Taxii Feed.'
   };
 
   const stringValidationErrors = _validateStringOptions(
