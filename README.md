@@ -10,7 +10,7 @@ To learn more about H-ISAC, please visit the [official website](https://h-isac.o
   <img width="370" alt="Integration Example" src="./assets/integration-ip.png">
 </div>
 
-## ThreatQuotient Integration Options
+## H-ISAC TAXII Feeds Integration Options
 ### H-ISAC TAXII Feed URL
 The URL used for your H-ISAC TAXII Feed.
 
