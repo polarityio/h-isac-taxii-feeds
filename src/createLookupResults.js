@@ -33,7 +33,7 @@ const createSummary = (collectionsWithFoundObjects) => {
     fp.uniq,
     fp.compact,
     fp.filter((tag) => !fp.toLower(tag).includes('threatstream')),
-    fp.first
+    fp.slice(0, 1)
   )(labels);
 };
 
