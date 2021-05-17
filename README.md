@@ -21,7 +21,7 @@ The API Username you will use to authenticate.
 The API Password you will use to authenticate.
 
 ### Refresh Data Time
-The time for the how often to refresh your data from the TAXII Feed in minutes.
+The time for the how often to refresh your data from the TAXII Feed in Hours.
 
 
 ## Installation Instructions

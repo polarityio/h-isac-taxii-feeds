@@ -58,8 +58,8 @@ module.exports = {
       key: 'refreshDataTime',
       name: 'Refresh Data Time',
       description:
-        'The time for the how often to refresh your data from the TAXII system in minutes.',
-      default: 60,
+        'The time for the how often to refresh your data from the TAXII system in Hours.',
+      default: 24,
       type: 'number',
       userCanEdit: true,
       adminOnly: false

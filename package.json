@@ -6,7 +6,7 @@
   "license": "MIT",
   "author": "Polarity",
   "dependencies": {
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "node-schedule": "^2.0.0",
     "pouchdb": "^7.2.2",
     "pouchdb-find": "^7.2.2",

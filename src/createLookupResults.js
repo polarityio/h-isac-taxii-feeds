@@ -28,7 +28,13 @@ const createSummary = (collectionsWithFoundObjects) => {
     fp.flow(fp.get('objects'), fp.flatMap(fp.get('indicator_types')))
   )(collectionsWithFoundObjects);
 
-  return fp.flow(fp.concat(indicatorTypes), fp.uniq, fp.compact)(labels);
+  return fp.flow(
+    fp.concat(indicatorTypes),
+    fp.uniq,
+    fp.compact,
+    fp.filter((tag) => !fp.toLower(tag).includes('threatstream')),
+    fp.first
+  )(labels);
 };
 
 module.exports = createLookupResults;

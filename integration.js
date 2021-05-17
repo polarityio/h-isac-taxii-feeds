@@ -59,7 +59,7 @@ const doLookup = async (entities, options, cb) => {
     if (startJob) {
       startJob = false;
       job = schedule.scheduleJob(
-        `*/${options.refreshDataTime} * * * *`,
+        `* */${options.refreshDataTime} * * *`,
         refreshTaxiiFeedData(
           collectionsDB,
           collectionObjectsDB,
@@ -110,7 +110,7 @@ const validateOptions = async (options, callback) => {
     if (job) job.cancel();
     validateOptionsStartedJob = true;
     job = schedule.scheduleJob(
-      `*/${fp.get('refreshDataTime.value', options)} * * * *`,
+      `* */${fp.get('refreshDataTime.value', options)} * * *`,
       refreshTaxiiFeedData(
         collectionsDB,
         collectionObjectsDB,
