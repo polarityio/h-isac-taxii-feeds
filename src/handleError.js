@@ -54,7 +54,6 @@ const handleError = (error) =>
   )(error);
 
 const checkForInternalServiceError = (statusCode, response) => {
-  // TODO: Update custom error handling
   const error = fp.get('error', response);
   if (error) {
     const internalServiceError = Error(error);

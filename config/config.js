@@ -1,10 +1,11 @@
 module.exports = {
-  name: 'HSISAC Taxii Feeds',
-  acronym: 'HTF',
-  description: '', //TODO: write desc and determine types
-  entityTypes: ['domain', 'url', 'IPv4', 'IPv6', 'SHA256'],
+  name: 'H-ISAC TAXII Feeds',
+  acronym: 'HITS',
+  description:
+    "The Polarity H-ISAC TAXII Feeds Integration retrieves Collections and Indicator Object data using H-ISAC's implementation of STIX 2.0 and TAXII 2.0.",
+  entityTypes: ['domain', 'url', 'email', 'IPv4', 'IPv6', 'hash'],
   styles: ['./styles/styles.less'],
-  defaultColor: 'light-pink',
+  defaultColor: 'light-gray',
   onDemandOnly: true,
   block: {
     component: {
@@ -28,8 +29,8 @@ module.exports = {
   options: [
     {
       key: 'url',
-      name: 'HSISAC Taxii Feed URL',
-      description: 'The URL used for your HSISAC Taxii Feed.',
+      name: 'H-ISAC TAXII Feed URL',
+      description: 'The URL used for your H-ISAC TAXII Feed.',
       default: 'https://health-isac.cyware.com/ctixapi/ctix21',
       type: 'text',
       userCanEdit: true,
@@ -49,7 +50,17 @@ module.exports = {
       name: 'API Password',
       description: 'The API Password you will use to authenticate.',
       default: '',
-      type: 'text',
+      type: 'password',
+      userCanEdit: true,
+      adminOnly: false
+    },
+    {
+      key: 'refreshDataTime',
+      name: 'Refresh Data Time',
+      description:
+        'The time for the how often to refresh your data from the TAXII system in Hours.',
+      default: 24,
+      type: 'number',
       userCanEdit: true,
       adminOnly: false
     }
