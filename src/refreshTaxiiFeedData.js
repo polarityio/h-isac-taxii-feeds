@@ -7,6 +7,8 @@ const refreshTaxiiFeedData = (
   requestWithDefaults,
   Logger
 ) => async () => {
+  Logger.info("Starting Data Refresh for Taxii Feed")
+
   const options = {
     username: fp.get('username.value', _options) || _options.username,
     password: fp.get('password.value', _options) || _options.password,
@@ -20,6 +22,8 @@ const refreshTaxiiFeedData = (
   const headers = { Accept: 'application/taxii+json;version=2.1' };
 
   try {
+    Logger.info('Obtaining Collections');
+
     const collections = fp.get(
       'body.collections',
       await requestWithDefaults({
@@ -30,27 +34,35 @@ const refreshTaxiiFeedData = (
       })
     );
 
+    Logger.info('Writing Collections to Database');
     await Promise.all(
       fp.map(
         async (collection) =>
           await Promise.all([
-            retryUntilWritten(collectionsDB, { ...collection, _id: collection.id } ),
+            retryUntilWritten(collectionsDB, { ...collection, _id: collection.id }),
+            () =>
+              Logger.info(
+                'Collections Written to Database. Getting Indicator Objects for Collections.'
+              ),
             getAndWriteCollectionObjects(
               collection,
               collectionObjectsDB,
               options.url,
               headers,
               auth,
-              requestWithDefaults
+              requestWithDefaults,
+              Logger
             )
           ]),
         collections
       )
     );
 
+    Logger.info('Indexing Database Search Fields');
     await collectionObjectsDB.createIndex({ index: { fields: ['id', 'name'] } });
     await collectionsDB.createIndex({ index: { fields: ['id'] } });
-
+    
+    Logger.info('Collections and Indicator Objects Update Successful');
   } catch (error) {
     Logger.error(error, 'Error in Refreshing Taxii Feed Data');
   }
@@ -62,8 +74,11 @@ const getAndWriteCollectionObjects = async (
   url,
   headers,
   auth,
-  requestWithDefaults
+  requestWithDefaults,
+  Logger
 ) => {
+  Logger.info(`Obtaining Indicator Object Data for Collection ID: ${collection.id}`);
+
   const objects = fp.get(
     'body.objects',
     await requestWithDefaults({
@@ -74,6 +89,8 @@ const getAndWriteCollectionObjects = async (
       auth
     })
   );
+
+  Logger.info(`Writing Indicator Objects to Database`);
 
   await Promise.all(
     fp.map(
@@ -86,6 +103,8 @@ const getAndWriteCollectionObjects = async (
       objects
     )
   );
+
+  Logger.info(`Indicator Objects for Collection ID "${collection.id}" Written to Database`);
 };
 
 const retryUntilWritten = async (db, doc) => {
