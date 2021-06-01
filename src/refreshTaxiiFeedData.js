@@ -1,5 +1,7 @@
 const fp = require('lodash/fp');
 
+let totalNumberOfIndicatorsFound;
+
 const refreshTaxiiFeedData = (
   collectionsDB,
   collectionObjectsDB,
@@ -7,7 +9,9 @@ const refreshTaxiiFeedData = (
   requestWithDefaults,
   Logger
 ) => async () => {
-  Logger.info("Starting Data Refresh for Taxii Feed")
+  Logger.info('Starting Data Refresh for Taxii Feed')
+
+  totalNumberOfIndicatorsFound = 0;
 
   const options = {
     username: fp.get('username.value', _options) || _options.username,
@@ -22,7 +26,7 @@ const refreshTaxiiFeedData = (
   const headers = { Accept: 'application/taxii+json;version=2.1' };
 
   try {
-    Logger.info('Obtaining Collections');
+    Logger.trace('Obtaining Collections');
 
     const collections = fp.get(
       'body.collections',
@@ -34,7 +38,8 @@ const refreshTaxiiFeedData = (
       })
     );
 
-    Logger.info('Writing Collections to Database');
+    Logger.info(`${collections.length} Collections Found`)
+    Logger.trace('Writing Collections to Database');
     await Promise.all(
       fp.map(
         async (collection) =>
@@ -58,11 +63,14 @@ const refreshTaxiiFeedData = (
       )
     );
 
-    Logger.info('Indexing Database Search Fields');
+    Logger.trace('Indexing Database Search Fields');
     await collectionObjectsDB.createIndex({ index: { fields: ['id', 'name'] } });
     await collectionsDB.createIndex({ index: { fields: ['id'] } });
     
-    Logger.info('Collections and Indicator Objects Update Successful');
+    Logger.info('Collections and Indicator Objects Update Successful', {
+      totalNumberOfCollectionsFound: collections.length,
+      totalNumberOfIndicatorsFound
+    });
   } catch (error) {
     Logger.error(error, 'Error in Refreshing Taxii Feed Data');
   }
@@ -77,7 +85,7 @@ const getAndWriteCollectionObjects = async (
   requestWithDefaults,
   Logger
 ) => {
-  Logger.info(`Obtaining Indicator Object Data for Collection ID: ${collection.id}`);
+  Logger.info(`Obtaining Indicator Object Data for Collection ID '${collection.id}'`);
 
   const objects = fp.get(
     'body.objects',
@@ -90,8 +98,10 @@ const getAndWriteCollectionObjects = async (
     })
   );
 
-  Logger.info(`Writing Indicator Objects to Database`);
+  totalNumberOfIndicatorsFound += objects.length;
 
+  Logger.info(`${objects.length} Indicator Objects found for Collection '${collection.id}'`);
+  Logger.trace(`Writing Indicator Objects to Database`);
   await Promise.all(
     fp.map(
       async (object) =>
@@ -104,7 +114,7 @@ const getAndWriteCollectionObjects = async (
     )
   );
 
-  Logger.info(`Indicator Objects for Collection ID "${collection.id}" Written to Database`);
+  Logger.info(`Indicator Objects for Collection ID '${collection.id}' Written to Database`);
 };
 
 const retryUntilWritten = async (db, doc) => {

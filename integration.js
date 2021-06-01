@@ -1,7 +1,7 @@
 const fp = require('lodash/fp');
-var PouchDB = require('pouchdb');
+let PouchDB = require('pouchdb');
 PouchDB.plugin(require('pouchdb-find'));
-var schedule = require('node-schedule');
+let schedule = require('node-schedule');
 
 const reduce = require('lodash/fp/reduce').convert({ cap: false });
 const createRequestWithDefaults = require('./src/createRequestWithDefaults');
@@ -19,17 +19,31 @@ let collectionObjectsDB;
 let collectionsDB;
 let _options;
 
-const startup = async (logger) => {
-  Logger = logger;
-
-  requestWithDefaults = createRequestWithDefaults(Logger);
-  if (collectionObjectsDB) await collectionObjectsDB.destroy();
-  if (collectionsDB) await collectionObjectsDB.destroy();
-  collectionObjectsDB = new PouchDB('collectionObjects', { auto_compaction: true });
-  collectionsDB = new PouchDB('collections', { auto_compaction: true });
+const setCollectionsDB = _collectionsDB => {
+  collectionsDB = _collectionsDB;
 };
 
-const doLookup = async (entities, options, cb) => {  
+const setCollectionObjectsDB = (_collectionObjectsDB) => {
+  collectionObjectsDB = _collectionObjectsDB;
+};
+
+const startup = (logger) => {
+  Logger = logger;
+
+  return async (cb) => {
+    requestWithDefaults = createRequestWithDefaults(Logger);
+
+    if (collectionObjectsDB) await collectionObjectsDB.destroy();
+    if (collectionsDB) await collectionObjectsDB.destroy();
+
+    setCollectionsDB(new PouchDB('collections', { auto_compaction: true }));
+    setCollectionObjectsDB(new PouchDB('collectionObjects', { auto_compaction: true }));
+
+    cb(null)
+  }
+};
+
+const doLookup = async (entities, options, cb) => {
   let lookupResults; 
   try {
     if (!fp.isEqual(options, _options) && !validateOptionsStartedJob) {
@@ -109,8 +123,12 @@ const validateOptions = async (options, callback) => {
   if (!errors.length) {
     if (job) job.cancel();
     validateOptionsStartedJob = true;
+    const refreshDataTime = fp.get('refreshDataTime.value', options);
+
+    Logger.info(`Refresh Data Time set to ${refreshDataTime} hours`)
+    
     job = schedule.scheduleJob(
-      `* */${fp.get('refreshDataTime.value', options)} * * *`,
+      `* */${refreshDataTime} * * *`,
       refreshTaxiiFeedData(
         collectionsDB,
         collectionObjectsDB,
