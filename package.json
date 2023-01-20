@@ -1,15 +1,15 @@
 {
-  "main": "./integration.js",
   "name": "h-isac-taxii-feeds",
-  "version": "3.0.1-beta",
+  "version": "3.0.2-beta",
+  "main": "./integration.js",
   "private": true,
   "license": "MIT",
   "author": "Polarity",
   "dependencies": {
     "lodash": "^4.17.21",
     "node-schedule": "^2.0.0",
+    "postman-request": "^2.88.1-postman.31",
     "pouchdb": "^7.2.2",
-    "pouchdb-find": "^7.2.2",
-    "request": "^2.88.2"
+    "pouchdb-find": "^7.2.2"
   }
 }
