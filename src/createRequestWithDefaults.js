@@ -1,6 +1,6 @@
 const fs = require('fs');
 const fp = require('lodash/fp');
-const request = require('request');
+const request = require('postman-request');
 const config = require('../config/config');
 
 const { checkForInternalServiceError } = require('./handleError');
