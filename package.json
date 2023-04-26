@@ -1,6 +1,6 @@
 {
   "name": "h-isac-taxii-feeds",
-  "version": "3.0.3-beta",
+  "version": "3.0.3",
   "main": "./integration.js",
   "private": true,
   "license": "MIT",
