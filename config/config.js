@@ -15,6 +15,13 @@ module.exports = {
       file: './client/block.hbs'
     }
   },
+  request: {
+    cert: '',
+    key: '',
+    passphrase: '',
+    ca: '',
+    proxy: ''
+  },
   logging: {
     level: 'info'
   },
