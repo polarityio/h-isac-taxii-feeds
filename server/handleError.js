@@ -1,4 +1,4 @@
-const fp = require('lodash/fp');
+const { get } = require('lodash/fp');
 
 const STATUS_CODE_ERROR_MESSAGE = {
   400: (error) => ({
@@ -54,7 +54,7 @@ const handleError = (error) =>
   )(error);
 
 const checkForInternalServiceError = (statusCode, response) => {
-  const error = fp.get('error', response);
+  const error = get('error', response);
   if (error) {
     const internalServiceError = Error(error);
     internalServiceError.status = 'internalServiceError';

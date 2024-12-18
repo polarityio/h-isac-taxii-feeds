@@ -4,6 +4,7 @@ The Polarity H-ISAC TAXII Feeds Integration retrieves Collections and Indicator 
 
 To learn more about H-ISAC, please visit the [official website](https://h-isac.org/).
 
+> ***NOTE:*** This integration must pull down all available data from the H-ISAC TAXII Feed. This takes time (2-5 minutes), so when you first add you configuration, and though you can search when pulling the data is in process, it does slow down the search results when pulling resources. For quick search results wait until the data is fully pulled down.
 
 <div style="display:flex; align-items: flex-start;">
   <img width="370" alt="Integration Example" src="./assets/integration-domain.png">
