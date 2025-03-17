@@ -3,7 +3,7 @@ module.exports = {
   acronym: 'HITS',
   description:
     "The Polarity H-ISAC TAXII Feeds Integration retrieves Collections and Indicator Object data using H-ISAC's implementation of STIX 2.0 and TAXII 2.0.",
-  entityTypes: ['domain', 'url', 'email', 'IPv4', 'IPv6', 'MD5', 'SHA1', 'SHA256'],
+  entityTypes: ['domain', 'url', 'email', 'IPv4', 'IPv6', 'MD5', 'SHA1', 'SHA256', 'cve'],
   defaultColor: 'light-gray',
   onDemandOnly: true,
   styles: ['./client/styles.less'],
